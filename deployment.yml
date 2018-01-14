@@ -22,9 +22,28 @@ apiVersion: v1
 metadata:
   name: books-api-simple
 spec:
-  selector:
+  selector:-
     app: books-api-simple
   ports:
     - protocol: TCP
       port: 80
       targetPort: 8080
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: books-api-simple
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.frontend.rule.type: PathPrefixStrip
+spec:
+  rules:
+  - host: books-api-simple.k8.wildwidewest.xyz
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: books-api-simple
+          servicePort: 80
+  tls:
+  - secretName: traefik-cert
