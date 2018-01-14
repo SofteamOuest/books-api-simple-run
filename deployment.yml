@@ -1,0 +1,30 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: books-api-simple
+spec:
+  replicas: 1
+  template:
+    metadata:
+     labels:
+        app: books-api-simple
+    spec:
+      containers:
+      - name: books-api-simple
+        image: registry.k8.wildwidewest.xyz/repository/docker-repository/pocs/books-api-simple:version
+        ports:
+        - containerPort: 8080
+      imagePullSecrets:
+      - name: regsecret
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: books-api-simple
+spec:
+  selector:
+    app: books-api-simple
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
